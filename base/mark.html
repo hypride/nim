@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter Student Marks</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    form {
+      width: 300px;
+      margin: 20px auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Enter Student Marks</h1>
+  
+  <form id="mark-form">
+    <label for="student-id">Student ID:</label>
+    <input type="text" id="student-id" required>
+    
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" required>
+    
+    <label for="total-marks">Total Marks:</label>
+    <input type="text" id="total-marks" required>
+    
+    <label for="status">Status:</label>
+    <select id="status" required>
+      <option value="">Select Status</option>
+      <option value="fail">Fail</option>
+      <option value="pass">Pass</option>
+    </select>
+    
+    <input type="submit" value="Submit">
+  </form>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjVC6djNQVq_QlbPZoyfltybIjbcH2dfM",
+  authDomain: "result-27d9d.firebaseapp.com",
+  projectId: "result-27d9d",
+  storageBucket: "result-27d9d.appspot.com",
+  messagingSenderId: "745418474661",
+  appId: "1:745418474661:web:5e54090a160457d69b394c",
+  measurementId: "G-8L77QY7ZC8"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const database = firebase.database();
+
+    const markForm = document.getElementById('mark-form');
+
+    markForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const studentId = document.getElementById('student-id').value;
+      const studentName = document.getElementById('student-name').value;
+      const totalMarks = document.getElementById('total-marks').value;
+      const status = document.getElementById('status').value;
+      
+      // Save student marks
+      saveStudentMarks(studentId, studentName, totalMarks, status);
+      // Save student information
+      saveStudentInformation(studentId, studentName);
+    });
+
+    function saveStudentMarks(studentId, studentName, totalMarks, status) {
+      database.ref('students/' + studentId).set({
+        name: studentName,
+        totalMarks: totalMarks,
+        status: status
+      }, (error) => {
+        if (error) {
+          alert('Marks data could not be saved.' + error.message);
+        } else {
+          alert('Marks data saved successfully.');
+        }
+      });
+    }
+
+    function saveStudentInformation(studentId, studentName) {
+      database.ref('information/' + studentId).set({
+        name: studentName
+      }, (error) => {
+        if (error) {
+          alert('Information data could not be saved.' + error.message);
+        } else {
+          alert('Information data saved successfully.');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
